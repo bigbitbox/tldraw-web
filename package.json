@@ -1,0 +1,45 @@
+{
+  "name": "ori-whiteboard-dev",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.80",
+    "@ai-sdk/google": "^2.0.74",
+    "@ai-sdk/openai": "^2.0.106",
+    "@tldraw/tlschema": "5.4.2",
+    "@worker-tools/json-stream": "^0.1.0-pre.12",
+    "ai": "^5.0.194",
+    "best-effort-json-parser": "^1.1.3",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-markdown": "^10.1.0",
+    "tldraw": "5.4.2",
+    "zod": "^4.1.8",
+    "@tldraw/sync": "5.4.2",
+    "@tldraw/sync-core": "5.4.2",
+    "@tldraw/assets": "5.4.2",
+    "fastify": "^5.6.0",
+    "@fastify/websocket": "^11.2.0",
+    "@fastify/static": "^8.3.0",
+    "@fastify/cookie": "^11.0.2",
+    "tsx": "^4.20.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^5.8.3",
+    "vite": "^8.0.16",
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.27.0"
+  },
+  "scripts": {
+    "build": "vite build && esbuild server/server.ts --bundle --platform=node --format=esm --packages=external --outfile=dist/server.mjs",
+    "start": "node dist/server.mjs",
+    "dev": "tsx watch server/server.ts",
+    "check": "tsc --noEmit",
+    "test": "node --import tsx --test --test-force-exit server/*.test.ts"
+  }
+}
