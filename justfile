@@ -55,3 +55,31 @@ canvas-get room="main":
 
 canvas-apply room file:
     @curl --config "$HOME/.config/tldraw/curl.conf" --fail-with-body --silent --show-error -H 'Content-Type: application/json' -X POST --data-binary @{{quote(file)}} '{{url}}/api/rooms/{{room}}/records'
+
+# CLI 独立安装，类似 lark-cli；无需重建或重启服务器。
+cli-install:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd cli
+    staging_dir="$(mktemp -d)"
+    trap 'rm -rf "$staging_dir"' EXIT
+    npm pack --pack-destination "$staging_dir" --silent
+    npm install --global --no-audit --no-fund "$staging_dir"/*.tgz
+    tldraw --version
+
+cli-check:
+    npm --prefix cli ci --no-audit --no-fund
+    npm run test:cli
+
+# 升级 SDK 后从官方 ShapeUtils 重新生成默认属性；CLI 运行时只依赖 schema，不引入 DOM。
+cli-defaults:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    node --input-type=module <<'JS'
+    import { defaultShapeUtils } from 'tldraw'
+    import { writeFileSync, readFileSync } from 'node:fs'
+    const sdkVersion = JSON.parse(readFileSync('node_modules/tldraw/package.json', 'utf8')).version
+    const shapes = Object.fromEntries(defaultShapeUtils.map(C => [C.type, new C(null).getDefaultProps()]))
+    writeFileSync('cli/src/defaults.json', JSON.stringify({ sdkVersion, shapes }, null, 2) + '\n')
+    process.exit(0)
+    JS

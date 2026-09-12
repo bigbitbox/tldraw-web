@@ -31,6 +31,15 @@ Cloudflare DNS 的 A 记录直连香港服务器，Caddy 自动签发、续期 H
 
 ## 本地 Codex 操作
 
+推荐使用独立的 `tldraw` CLI + Skill，支持画布 URL、新建/读取/改名、批量作画及图片读取/插入。安装与认证见 [CLI 说明](cli/README.md)。原 curl recipes 保留用于底层运维。
+
+```sh
+tldraw auth status
+tldraw board create --name '新画布'
+tldraw board read 'https://tldraw.rayzor.site/r/main'
+tldraw schema board.apply
+```
+
 在仓库根目录运行：
 
 ```sh

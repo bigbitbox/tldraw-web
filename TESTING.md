@@ -1,5 +1,18 @@
 # 部署验收（2026-09-12）
 
+## 外部 Agent CLI + Skill
+
+安装 `@rayzor/tldraw-cli` 0.1.0，命令 `tldraw`；Skill 安装在本机 `~/.codex/skills/tldraw`。认证使用单独的 API key，配置文件 0600，不写入仓库。服务器无需变更或重启。
+
+- 本机 `npm run test:cli` 9/9 通过，包含真实 CLI 子进程对本项目服务的登录、创建/改名/读取、dry-run 无写入、原生图形与绑定、版本冲突、PNG 往返、输出文件保护、schema 与 Skill 安装。
+- 专项覆盖 origin 绑定、环境 key 不继承保存的服务器、禁止跨 origin redirect、拒绝外链附件转发凭证、图片与 asset 类型一致性、上传响应不确定时的恢复标识、实际净 diff 返回。
+- 独立审查补充 100 组同 revision 并发写入，每组均一次成功、一次 HTTP 409。
+- CLI 从 `.tgz` 全局安装，npm bin 可正常运行，`auth status` 已验证公网认证，源 Skill 和安装后的 Skill 验证通过。
+- 线上 [CLI 验收画布](https://tldraw.rayzor.site/r/051675d5-0144-45c4-bf17-e0304af0ab08)：创建两个图形、文字、笔画、两个箭头绑定，再插入一张 1px PNG 测试附件；下载字节与原图完全一致。
+- CLI 修改验收画布文字为“CLI 实时同步已验证”，真实官方 WSS 会话收到更新，随后通过 CLI 重新读取确认持久化。过期编辑退出码为 5。
+- 用户提供的 `6f88724a-bdcc-4558-9dec-0ed8310b9bb4` 画布仅用于只读验证；前后 revision 均为 9，20 条记录完全一致。
+- 当前能力为结构读取与原始图片下载，不提供整幅画布的 PNG 渲染。未对所有图形/媒体格式做视觉验收；GIF/WebP/AVIF 未做独立浏览器显示测试。
+
 ## 公网与 Trial 更新
 
 当前入口 <https://tldraw.rayzor.site>。镜像 `ori/tldraw:20260912-trial`，ID `sha256:c883017e1dd300b4aab223299cd552bf533af6142a1378ea09cc83b209141f08`。以下旧版记录保留为历史，当前运行生产构建。

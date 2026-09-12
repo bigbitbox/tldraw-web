@@ -1,0 +1,182 @@
+{
+  "sdkVersion": "5.4.2",
+  "shapes": {
+    "text": {
+      "color": "black",
+      "size": "m",
+      "w": 8,
+      "font": "draw",
+      "textAlign": "start",
+      "autoSize": true,
+      "scale": 1,
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    },
+    "bookmark": {
+      "url": "",
+      "w": 300,
+      "h": 320,
+      "assetId": null
+    },
+    "draw": {
+      "segments": [],
+      "color": "black",
+      "fill": "none",
+      "dash": "draw",
+      "size": "m",
+      "isComplete": false,
+      "isClosed": false,
+      "isPen": false,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "geo": {
+      "w": 100,
+      "h": 100,
+      "geo": "rectangle",
+      "dash": "draw",
+      "growY": 0,
+      "url": "",
+      "scale": 1,
+      "flipX": false,
+      "flipY": false,
+      "color": "black",
+      "labelColor": "black",
+      "fill": "none",
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      }
+    },
+    "note": {
+      "color": "black",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "size": "m",
+      "font": "draw",
+      "align": "middle",
+      "verticalAlign": "middle",
+      "labelColor": "black",
+      "growY": 0,
+      "fontSizeAdjustment": 1,
+      "url": "",
+      "scale": 1,
+      "textLastEditedBy": null
+    },
+    "line": {
+      "dash": "draw",
+      "size": "m",
+      "color": "black",
+      "spline": "line",
+      "points": {
+        "a1": {
+          "id": "a1",
+          "index": "a1",
+          "x": 0,
+          "y": 0
+        },
+        "a2AwM": {
+          "id": "a2AwM",
+          "index": "a2AwM",
+          "x": 0.1,
+          "y": 0.1
+        }
+      },
+      "scale": 1
+    },
+    "frame": {
+      "w": 320,
+      "h": 180,
+      "name": "",
+      "color": "black"
+    },
+    "arrow": {
+      "kind": "arc",
+      "elbowMidPoint": 0.5,
+      "dash": "draw",
+      "size": "m",
+      "fill": "none",
+      "color": "black",
+      "labelColor": "black",
+      "bend": 0,
+      "start": {
+        "x": 0,
+        "y": 0
+      },
+      "end": {
+        "x": 2,
+        "y": 0
+      },
+      "arrowheadStart": "none",
+      "arrowheadEnd": "arrow",
+      "richText": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "labelPosition": 0.5,
+      "font": "draw",
+      "scale": 1
+    },
+    "highlight": {
+      "segments": [],
+      "color": "black",
+      "size": "m",
+      "isComplete": false,
+      "isPen": false,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "embed": {
+      "w": 300,
+      "h": 300,
+      "url": ""
+    },
+    "image": {
+      "w": 100,
+      "h": 100,
+      "assetId": null,
+      "playing": true,
+      "url": "",
+      "crop": null,
+      "flipX": false,
+      "flipY": false,
+      "altText": ""
+    },
+    "video": {
+      "w": 100,
+      "h": 100,
+      "assetId": null,
+      "autoplay": true,
+      "url": "",
+      "altText": "",
+      "time": 0,
+      "playing": true
+    }
+  }
+}

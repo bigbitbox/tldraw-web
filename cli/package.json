@@ -1,0 +1,17 @@
+{
+  "name": "@rayzor/tldraw-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent CLI for the Rayzor self-hosted tldraw workspace",
+  "type": "module",
+  "bin": { "tldraw": "src/main.mjs" },
+  "engines": { "node": ">=22" },
+  "files": ["src", "skill"],
+  "scripts": { "test": "node --test test/board.test.mjs" },
+  "dependencies": {
+    "@tldraw/tlschema": "5.4.2",
+    "@tldraw/utils": "5.4.2",
+    "image-size": "2.0.2",
+    "zod": "4.1.8"
+  }
+}
