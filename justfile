@@ -1,7 +1,7 @@
 set positional-arguments := true
 host := "ali-hk-24"
-url := "http://100.97.118.114:5858"
-image := "ori/tldraw-dev:20260912"
+url := "https://tldraw.rayzor.site"
+image := "ori/tldraw:20260912-trial"
 
 default:
     @just --list
@@ -14,7 +14,8 @@ check:
 
 # 所有安装、构建都在当前 Mac；云主机仅加载预构建镜像。
 build:
-    docker buildx build --builder multiarch-proxy --platform linux/amd64 --load -t {{image}} .
+    @test -s "$HOME/.config/tldraw/license-key.txt"
+    docker buildx build --builder multiarch-proxy --platform linux/amd64 --no-cache-filter build --build-arg APP_ENV=production --secret id=tldraw_license,src="$HOME/.config/tldraw/license-key.txt" --load -t {{image}} .
 
 load:
     #!/usr/bin/env bash

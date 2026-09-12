@@ -31,7 +31,7 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
   const uploads = join(dataDir, 'uploads')
   mkdirSync(uploads, { recursive: true })
   const rooms = new Rooms(dataDir)
-  const app = fastify({ logger: { level: 'warn', redact: ['req.headers.authorization', 'req.headers.cookie'] }, bodyLimit: 8 * 1024 * 1024 })
+  const app = fastify({ trustProxy: process.env.TRUST_PROXY === 'true' ? (_address: string, hop: number) => hop === 0 : false, logger: { level: 'warn', redact: ['req.headers.authorization', 'req.headers.cookie'] }, bodyLimit: 8 * 1024 * 1024 })
   await app.register(cookie)
   await app.register(websocket, { options: { maxPayload: 8 * 1024 * 1024 } })
   const browserHash = hash(accessToken)
@@ -42,7 +42,7 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
     const bearer = req.headers.authorization?.replace(/^Bearer /, '') ?? ''
     return matches(bearer, apiHash) || matches(req.cookies.whiteboard_session ?? '', hash(cookieValue))
   }
-  // Allow only the exact configured origin. The private development endpoint must not be writable cross-site.
+  // Allow only the exact configured origin; the deployment exposes the backend only through Caddy.
   const validOrigin = (req: FastifyRequest) => {
     const origin = req.headers.origin
     if (!origin) return true
@@ -187,6 +187,6 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const app = await buildServer()
   await app.listen({ host: process.env.HOST ?? '0.0.0.0', port: Number(process.env.PORT ?? 5858) })
-  console.log('Whiteboard development server ready on port ' + (process.env.PORT ?? 5858))
+  console.log('Whiteboard server ready on port ' + (process.env.PORT ?? 5858))
   for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => { void app.close().then(() => process.exit(0)) })
 }

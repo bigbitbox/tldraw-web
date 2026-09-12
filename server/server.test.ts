@@ -49,3 +49,27 @@ test('authentication, durable rooms/assets, validated atomic edits and stale-wri
     assert.equal((await app.inject({url:'/uploads/test.png'})).statusCode,401)
   } finally { await app.close() }
 })
+
+
+test('HTTPS session cookie and login limits behind exactly one trusted proxy', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'tldraw-proxy-test-'))
+  const previous = process.env.TRUST_PROXY
+  process.env.TRUST_PROXY = 'true'
+  let app: Awaited<ReturnType<typeof buildServer>>
+  try {
+    app = await buildServer({ dataDir: dir, accessToken: token, apiToken, clientDir: '/nonexistent', secureCookie: true })
+  } finally {
+    if (previous === undefined) delete process.env.TRUST_PROXY
+    else process.env.TRUST_PROXY = previous
+  }
+  try {
+    const attempt = (ip: string, value = 'wrong') => app.inject({ method: 'POST', url: '/api/session', headers: { 'x-forwarded-for': ip }, payload: { token: value } })
+    for (let i = 0; i < 12; i++) assert.equal((await attempt('198.51.100.1')).statusCode, 401)
+    assert.equal((await attempt('198.51.100.1')).statusCode, 429)
+    assert.equal((await attempt('198.51.100.99, 198.51.100.1')).statusCode, 429)
+    assert.equal((await attempt('198.51.100.2')).statusCode, 401)
+    const login = await attempt('198.51.100.2', token)
+    assert.equal(login.statusCode, 200)
+    assert.match(login.headers['set-cookie'] as string, /; Secure(?:;|$)/)
+  } finally { await app.close() }
+})

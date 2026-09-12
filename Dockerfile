@@ -6,10 +6,11 @@ RUN npm ci --no-audit --no-fund
 FROM dependencies AS build
 COPY . .
 ARG APP_ENV=development
-ARG VITE_TLDRAW_LICENSE_KEY=""
 ENV APP_ENV=$APP_ENV
-ENV VITE_TLDRAW_LICENSE_KEY=$VITE_TLDRAW_LICENSE_KEY
-RUN npm run check && npm run build
+RUN --mount=type=secret,id=tldraw_license \
+    if [ "$APP_ENV" = production ]; then test -s /run/secrets/tldraw_license; fi && \
+    export VITE_TLDRAW_LICENSE_KEY="$(cat /run/secrets/tldraw_license 2>/dev/null || true)" && \
+    npm run check && npm run build
 RUN npm prune --omit=dev --no-audit --no-fund
 
 FROM node:24-bookworm-slim
