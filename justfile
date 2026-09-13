@@ -1,7 +1,7 @@
 set positional-arguments := true
 host := "ali-hk-24"
 url := "https://tldraw.rayzor.site"
-image := "ori/tldraw:20260912-trial"
+image := "ori/tldraw:20260913-oidc"
 
 default:
     @just --list
@@ -38,9 +38,10 @@ backup:
     set -euo pipefail
     ssh '{{host}}' bash -s <<'REMOTE'
     set -euo pipefail
+    umask 077
     mkdir -p /home/ray/backups/tldraw
-    sudo systemctl stop docker-tldraw-dev
     trap 'sudo systemctl start docker-tldraw-dev' EXIT
+    sudo systemctl stop docker-tldraw-dev
     target="/home/ray/backups/tldraw/$(date +%Y%m%d-%H%M%S).tar.gz"
     tar -C /home/ray/datas -czf "$target" tldraw
     echo "$target"

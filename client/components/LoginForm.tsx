@@ -3,12 +3,13 @@ import { loginWithToken } from '../api'
 
 interface LoginFormProps {
 	onSuccess: () => void
+	oidcEnabled: boolean
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
+export function LoginForm({ onSuccess, oidcEnabled }: LoginFormProps) {
 	const [token, setToken] = useState('')
 	const [loading, setLoading] = useState(false)
-	const [error, setError] = useState<string | null>(null)
+	const [error, setError] = useState<string | null>(() => new URLSearchParams(window.location.search).has('auth_error') ? '统一登录未完成，请重试或使用访问口令' : null)
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault()
@@ -53,21 +54,28 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 						</svg>
 					</div>
 					<h2 className="auth-title">访问验证</h2>
-					<p className="auth-subtitle">请输入访问口令进入白板工作区</p>
+					<p className="auth-subtitle">{oidcEnabled ? '登录以进入白板工作区' : '请输入访问口令进入白板工作区'}</p>
 				</div>
 
 				<form onSubmit={handleSubmit} className="auth-form">
+					{oidcEnabled && <>
+						<button type="button" className="auth-submit-btn" onClick={() => {
+							window.location.assign('/auth/oidc/start?returnTo=' + encodeURIComponent(window.location.pathname))
+						}}>使用 Authelia 登录</button>
+						<p className="auth-subtitle">或使用访问口令</p>
+					</>}
 					<div className="auth-field">
 						<input
 							type="password"
 							className="auth-input"
-							placeholder="输入访问口令 (Token)"
+							placeholder="输入访问口令"
+							aria-label="访问口令"
 							value={token}
 							onChange={(e) => {
 								setToken(e.target.value)
 								if (error) setError(null)
 							}}
-							autoFocus
+							autoFocus={!oidcEnabled}
 							disabled={loading}
 						/>
 					</div>

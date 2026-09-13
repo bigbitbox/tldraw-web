@@ -1,4 +1,4 @@
-import fastify, { type FastifyRequest } from 'fastify'
+import fastify, { type FastifyRequest, type FastifyReply } from 'fastify'
 import websocket from '@fastify/websocket'
 import cookie from '@fastify/cookie'
 import statics from '@fastify/static'
@@ -13,6 +13,8 @@ import { type TLRecord } from '@tldraw/tlschema'
 import { AgentService } from '../worker/do/AgentService'
 import { type AgentPrompt } from '../shared/types/AgentPrompt'
 import { Rooms } from './rooms'
+import { oidcFromEnv, registerOidc, type OidcSettings } from './oidc'
+import type { Configuration } from 'openid-client'
 
 const roomName = z.object({ name: z.string().trim().min(1).max(120) })
 const mutation = z.object({
@@ -23,7 +25,7 @@ const mutation = z.object({
 const fail = (statusCode: number, message: string) => Object.assign(new Error(message), { statusCode })
 const hash = (value: string) => createHash('sha256').update(value).digest()
 
-export async function buildServer(options: { dataDir?: string; accessToken?: string; apiToken?: string; clientDir?: string; secureCookie?: boolean } = {}) {
+export async function buildServer(options: { dataDir?: string; accessToken?: string; apiToken?: string; clientDir?: string; secureCookie?: boolean; oidc?: OidcSettings; oidcConfiguration?: Configuration } = {}) {
   const accessToken = options.accessToken ?? process.env.ACCESS_TOKEN ?? ''
   const apiToken = options.apiToken ?? process.env.API_TOKEN ?? accessToken
   if (accessToken.length < 24 || apiToken.length < 24) throw new Error('ACCESS_TOKEN and API_TOKEN must contain at least 24 characters')
@@ -37,6 +39,10 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
   const browserHash = hash(accessToken)
   const apiHash = hash(apiToken)
   const cookieValue = createHash('sha256').update('tldraw-session:' + accessToken).digest('hex')
+  const oidcSettings = options.oidc ?? oidcFromEnv()
+  const completeLogin = (reply: FastifyReply) => {
+    reply.setCookie('whiteboard_session', cookieValue, { httpOnly: true, sameSite: 'strict', secure: !!oidcSettings || (options.secureCookie ?? process.env.SECURE_COOKIE === 'true'), path: '/', maxAge: 30 * 86400 })
+  }
   const matches = (a: string, b: Buffer) => timingSafeEqual(hash(a), b)
   const authenticated = (req: FastifyRequest) => {
     const bearer = req.headers.authorization?.replace(/^Bearer /, '') ?? ''
@@ -56,6 +62,7 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
     res.header('X-Frame-Options', 'SAMEORIGIN')
     if (!validOrigin(req)) throw fail(403, '来源不匹配')
     const path = req.routeOptions.url ?? req.url.split('?')[0]
+    if (path.startsWith('/auth/')) res.header('Cache-Control', 'no-store').header('Referrer-Policy', 'no-referrer')
     if ((path.startsWith('/api/') && path !== '/api/session') || path.startsWith('/connect/') || path.startsWith('/uploads/') || path === '/stream') {
       res.header('Cache-Control', 'no-store')
       if (!authenticated(req)) throw fail(401, '请先登录')
@@ -67,7 +74,8 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
     res.status(status).send({ error: status >= 500 ? '服务暂时不可用' : (error as Error).message })
   })
   app.get('/healthz', async () => ({ ok: true, mode: process.env.APP_ENV ?? 'development' }))
-  app.get('/api/session', async (req, res) => { res.header('Cache-Control', 'no-store'); return { authenticated: authenticated(req) } })
+  if (oidcSettings) registerOidc(app, oidcSettings, completeLogin, options.oidcConfiguration)
+  app.get('/api/session', async (req, res) => { res.header('Cache-Control', 'no-store'); return { authenticated: authenticated(req), oidcEnabled: !!oidcSettings } })
   const attempts = new Map<string, { count: number; until: number }>()
   const attemptTimer = setInterval(() => { for (const [ip, a] of attempts) if (a.until < Date.now()) attempts.delete(ip) }, 60_000)
   attemptTimer.unref()
@@ -81,7 +89,7 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
       throw fail(401, '访问口令不正确')
     }
     attempts.delete(ip)
-    res.setCookie('whiteboard_session', cookieValue, { httpOnly: true, sameSite: 'strict', secure: options.secureCookie ?? process.env.SECURE_COOKIE === 'true', path: '/', maxAge: 30 * 86400 })
+    completeLogin(res)
     return { authenticated: true }
   })
   app.delete('/api/session', async (_req, res) => { res.clearCookie('whiteboard_session', { path: '/' }); return { authenticated: false } })

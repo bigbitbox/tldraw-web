@@ -18,6 +18,8 @@
 
 ## 访问与凭证
 
+浏览器优先选择“使用 Authelia 登录”，以 `auth.rayzor.site` 的 `ray` 身份进入现有工作区。也保留访问口令登录。OIDC 仅允许已核对的本人 subject；没有改变画布的所有权，也没有开放多用户共享。
+
 本机：
 
 - `~/.config/tldraw/access.txt`：浏览器入口和访问口令。
@@ -27,7 +29,13 @@
 
 远端：`/home/ray/.config/tldraw/server.env`，由 Nix OCI 的 `environmentFiles` 注入。服务端凭证文件均为 0600，不进 Git、Nix store 或镜像。浏览器只接收 HttpOnly 会话 cookie，不接收模型 API key。改访问口令后重启服务，已有 cookie 失效。
 
-Cloudflare DNS 的 A 记录直连香港服务器，Caddy 自动签发、续期 HTTPS 证书并代理 WebSocket/SSE。容器只绑定 `127.0.0.1:5858`，会话 cookie 标记为 Secure，允许的浏览器来源仅为正式 HTTPS 域名。后端仅信任紧邻的 Caddy 代理，以客户端地址执行登录限流。首次访问新域名需要用原口令重新登录；原 HTTP 域名下的本地 AI 对话历史不会自动迁移，画布数据保持不变。旧 Tailscale HTTP 入口已退役；Tailnet Serve 未启用。实例不依赖官方 demo 同步服务器。
+OIDC 的 `OIDC_CLIENT_SECRET` 和 `OIDC_ALLOWED_SUBJECT` 单独保存在 `/home/ray/.config/authelia/tldraw-oidc.env`，Mac 副本位于 `~/.config/authelia/ali-hk-24/tldraw-oidc.env`。`OIDC_ISSUER`、`OIDC_CLIENT_ID`、`OIDC_REDIRECT_URI` 由主机 Nix 配置管理；缺少 issuer 时保留原口令模式，配置 OIDC 时必须同时指定完整凭据、HTTPS 地址和明确的本人 subject。
+
+登录路由为 `/auth/oidc/start` 和 `/auth/oidc/callback`。`openid-client` 校验 issuer、audience、有效期、ID Token 签名、state、nonce 与 PKCE S256；回调只能返回 `/` 或本地画布路径。登录事务在内存最多保留 10 分钟，每个 IP 最多 10 个未完成事务，全局最多 1000 个。若重启发生在授权途中，重新点击登录即可。
+
+登录成功后复用原有 `whiteboard_session`，因此重建/重启容器不会强制已登录浏览器退出；CLI Bearer token 不变。该既有会话由访问口令派生，浏览器 Cookie 有效期为 30 天，服务端没有逐会话撤销功能。网页注销只退出本应用；如需立即撤销所有浏览器会话，应更换 `ACCESS_TOKEN` 并重启。禁用 Authelia 用户不会立即撤销已发出的应用本地会话。
+
+Cloudflare DNS 的 A 记录直连香港服务器，Caddy 自动签发、续期 HTTPS 证书并代理 WebSocket/SSE。容器只绑定 `127.0.0.1:5858`，会话 cookie 标记为 Secure，允许的浏览器来源仅为正式 HTTPS 域名。后端仅信任紧邻的 Caddy 代理，以客户端地址执行登录限流。首次访问可通过 Authelia 或访问口令登录；原 HTTP 域名下的本地 AI 对话历史不会自动迁移，画布数据保持不变。旧 Tailscale HTTP 入口已退役；Tailnet Serve 未启用。实例不依赖官方 demo 同步服务器。
 
 ## 本地 Codex 操作
 
@@ -79,7 +87,9 @@ just -f apps/tldraw/justfile backup
 
 `backup` 短暂停止白板、打包完整数据目录、恢复服务，输出备份路径；不备份凭证。恢复时停止服务、将备份解压回 `/home/ray/datas` 并确认目录属主为 `ray:users`，然后启动。不要在运行时直接复制单个 SQLite 文件，WAL 可能尚未合并。
 
-服务名 `docker-tldraw-dev`，镜像 `ori/tldraw:20260912-trial`。默认限制 768 MiB 内存、1.5 CPU、256 进程，只读容器文件系统，仅 `/data` 和临时目录可写。
+服务名 `docker-tldraw-dev`，镜像 `ori/tldraw:20260913-oidc`。默认限制 768 MiB 内存、1.5 CPU、256 进程，只读容器文件系统，仅 `/data` 和临时目录可写。
+
+2026-09-13 OIDC 验收：服务端 3 项测试、CLI 9 项测试、TypeScript 检查及 Linux amd64 生产构建通过；Vivaldi 真实 OIDC 登录无需再次输入密码，返回 `/r/main` 并正常加载画布。重启后同一浏览器会话与原 API token 均有效，4 个画布、65 条记录的 revision 和内容摘要与升级前一致。升级前完整数据备份：`/home/ray/backups/tldraw/20260913-100600.tar.gz`。
 
 ## 上游
 

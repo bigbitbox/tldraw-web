@@ -6,19 +6,20 @@ export interface RoomInfo {
 
 export interface SessionResponse {
 	authenticated: boolean
+	oidcEnabled: boolean
 }
 
-export async function getSession(): Promise<boolean> {
+export async function getSession(): Promise<SessionResponse> {
 	try {
 		const res = await fetch('/api/session', {
 			method: 'GET',
 			credentials: 'same-origin',
 		})
-		if (!res.ok) return false
+		if (!res.ok) return { authenticated: false, oidcEnabled: false }
 		const data = (await res.json()) as SessionResponse
-		return Boolean(data?.authenticated)
+		return { authenticated: Boolean(data?.authenticated), oidcEnabled: Boolean(data?.oidcEnabled) }
 	} catch {
-		return false
+		return { authenticated: false, oidcEnabled: false }
 	}
 }
 

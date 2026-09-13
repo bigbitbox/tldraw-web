@@ -6,6 +6,7 @@ import { RoomView } from './components/RoomView'
 
 function App() {
 	const [authenticated, setAuthenticated] = useState<boolean | null>(null)
+	const [oidcEnabled, setOidcEnabled] = useState(false)
 	const [currentPath, setCurrentPath] = useState<string>(() =>
 		typeof window !== 'undefined' ? window.location.pathname : '/'
 	)
@@ -13,9 +14,10 @@ function App() {
 	// Check auth session on load
 	useEffect(() => {
 		let isMounted = true
-		getSession().then((isAuth) => {
+		getSession().then((session) => {
 			if (isMounted) {
-				setAuthenticated(isAuth)
+				setAuthenticated(session.authenticated)
+				setOidcEnabled(session.oidcEnabled)
 			}
 		})
 		return () => {
@@ -57,6 +59,7 @@ function App() {
 	if (!authenticated) {
 		return (
 			<LoginForm
+				oidcEnabled={oidcEnabled}
 				onSuccess={() => {
 					setAuthenticated(true)
 				}}
