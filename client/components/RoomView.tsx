@@ -174,11 +174,36 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 	const store = useSync(syncOptions)
 
 	// Self-hosted asset URLs
+	// 画笔(draw)字体官方只有拉丁字形,中文会回退成系统黑体;
+	// 这里把 draw 字体的 4 个字重槽位都指向霞鹜文楷(SIL OFL 授权,见 /fonts/LXGWWenKai-LICENSE.txt),
+	// 让中文文本也保持手写风格。字体仅一个 Regular 字重,粗体/斜体由浏览器合成。
+	const LXGW_WENKAI_URL = '/fonts/LXGWWenKai-Regular.woff2'
 	const assetUrls = useMemo(() => {
-		return getAssetUrls({ baseUrl: '/tldraw-assets' })
+		const defaults = getAssetUrls({ baseUrl: '/tldraw-assets' })
+		return {
+			...defaults,
+			fonts: {
+				...defaults.fonts,
+				tldraw_draw: LXGW_WENKAI_URL,
+				tldraw_draw_bold: LXGW_WENKAI_URL,
+				tldraw_draw_italic: LXGW_WENKAI_URL,
+				tldraw_draw_italic_bold: LXGW_WENKAI_URL,
+			},
+		}
 	}, [])
 
 	const licenseKey = import.meta.env.VITE_TLDRAW_LICENSE_KEY || undefined
+
+	// 官方 zoomSteps 为 [0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8],Cmd+/- 一次跨档过大;
+	// 改为 10% 步进(0.1~4.0),首尾值即缩放上下限。
+	const cameraOptions = useMemo(
+		() => ({
+			camera: {
+				zoomSteps: Array.from({ length: 40 }, (_, i) => (i + 1) / 10),
+			},
+		}),
+		[]
+	)
 
 	const components: TLComponents = useMemo(() => {
 		return {
@@ -217,6 +242,7 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 								overlayUtils={overlayUtils}
 								overrides={overrides}
 								components={components}
+								options={cameraOptions}
 								onMount={handleEditorMount}
 							>
 								<TldrawAgentAppProvider onMount={setApp} onUnmount={handleUnmount} />
