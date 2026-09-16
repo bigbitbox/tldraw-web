@@ -14,15 +14,10 @@ body {
 	position: fixed;
 	inset: 0;
 	display: grid;
-	grid-template-columns: 1fr 350px;
+	grid-template-columns: 1fr;
 }
 
-@media (max-width: 768px) {
-	.tldraw-agent-container {
-		grid-template-columns: 1fr;
-		grid-template-rows: 1fr auto;
-	}
-}
+
 
 .tldraw-canvas {
 	width: 100%;
@@ -42,9 +37,16 @@ body {
 }
 
 .chat-panel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 350px;
+	height: auto;
+	z-index: 40;
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
+	box-shadow: -4px 0 16px rgba(0, 0, 0, 0.18);
 	font-size: 14px;
 	background-color: var(--tl-color-panel);
 	border-left: 1px solid var(--tl-color-low);
@@ -57,13 +59,10 @@ body {
 
 @media (max-width: 768px) {
 	.chat-panel {
+		top: auto;
 		height: 50vh;
 		width: 100vw;
 	}
-}
-
-.chat-panel {
-	position: relative;
 }
 
 .chat-panel * {
@@ -783,7 +782,7 @@ button.prompt-tag span {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	background-color: var(--tl-color-background, #fdfdfd);
+	background-color: var(--app-bg);
 }
 
 .room-body {
@@ -815,8 +814,8 @@ button.prompt-tag span {
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 16px;
-	background-color: var(--tl-color-panel, #ffffff);
-	border-bottom: 1px solid var(--tl-color-low, #e5e5e5);
+	background-color: var(--app-surface);
+	border-bottom: 1px solid var(--app-border);
 	z-index: 50;
 	user-select: none;
 }
@@ -834,9 +833,9 @@ button.prompt-tag span {
 	gap: 6px;
 	padding: 6px 10px;
 	border-radius: 6px;
-	border: 1px solid var(--tl-color-low, #e5e5e5);
+	border: 1px solid var(--app-border);
 	background: transparent;
-	color: var(--tl-color-text-1, #1a1a1a);
+	color: var(--app-text);
 	font-size: 13px;
 	font-weight: 500;
 	cursor: pointer;
@@ -844,8 +843,8 @@ button.prompt-tag span {
 }
 
 .room-back-btn:hover {
-	background-color: var(--tl-color-muted-2, #f5f5f5);
-	border-color: var(--tl-color-mid, #d4d4d4);
+	background-color: var(--app-surface-3);
+	border-color: var(--app-border-strong);
 }
 
 .room-btn-icon {
@@ -868,7 +867,7 @@ button.prompt-tag span {
 	border: none;
 	padding: 4px 8px;
 	border-radius: 6px;
-	color: var(--tl-color-text-1, #1a1a1a);
+	color: var(--app-text);
 	font-size: 14px;
 	font-weight: 600;
 	cursor: pointer;
@@ -877,7 +876,7 @@ button.prompt-tag span {
 }
 
 .room-name-btn:hover {
-	background-color: var(--tl-color-muted-2, #f5f5f5);
+	background-color: var(--app-surface-3);
 }
 
 .room-name-text {
@@ -889,7 +888,7 @@ button.prompt-tag span {
 .room-edit-icon {
 	width: 14px;
 	height: 14px;
-	color: var(--tl-color-text-3, #737373);
+	color: var(--app-text-3);
 	flex-shrink: 0;
 	opacity: 0.7;
 }
@@ -898,11 +897,11 @@ button.prompt-tag span {
 	height: 28px;
 	padding: 0 8px;
 	border-radius: 4px;
-	border: 1px solid var(--tl-color-primary, #2b6cb0);
+	border: 1px solid var(--app-primary);
 	font-size: 14px;
 	font-weight: 600;
-	color: var(--tl-color-text-1, #1a1a1a);
-	background-color: var(--tl-color-panel, #ffffff);
+	color: var(--app-text);
+	background-color: var(--app-surface);
 	outline: none;
 	width: 200px;
 }
@@ -916,8 +915,8 @@ button.prompt-tag span {
 	border-radius: 12px;
 	font-size: 12px;
 	font-weight: 500;
-	background-color: var(--tl-color-muted-2, #f5f5f5);
-	color: var(--tl-color-text-2, #525252);
+	background-color: var(--app-surface-3);
+	color: var(--app-text-2);
 }
 
 .room-sync-dot {
@@ -961,9 +960,9 @@ button.prompt-tag span {
 	gap: 6px;
 	padding: 6px 12px;
 	border-radius: 6px;
-	border: 1px solid var(--tl-color-low, #e5e5e5);
+	border: 1px solid var(--app-border);
 	background-color: transparent;
-	color: var(--tl-color-text-1, #1a1a1a);
+	color: var(--app-text);
 	font-size: 13px;
 	font-weight: 500;
 	cursor: pointer;
@@ -971,14 +970,14 @@ button.prompt-tag span {
 }
 
 .room-sidebar-toggle-btn:hover {
-	background-color: var(--tl-color-muted-2, #f5f5f5);
-	border-color: var(--tl-color-mid, #d4d4d4);
+	background-color: var(--app-surface-3);
+	border-color: var(--app-border-strong);
 }
 
 .room-sidebar-toggle-btn.active {
-	background-color: rgba(43, 108, 176, 0.08);
-	border-color: rgba(43, 108, 176, 0.35);
-	color: var(--tl-color-primary, #2b6cb0);
+	background-color: var(--app-primary-soft);
+	border-color: var(--app-primary-soft-border);
+	color: var(--app-primary);
 }
 
 .room-logout-btn {
@@ -986,7 +985,7 @@ button.prompt-tag span {
 	border-radius: 6px;
 	border: none;
 	background: transparent;
-	color: var(--tl-color-text-3, #737373);
+	color: var(--app-text-3);
 	font-size: 13px;
 	cursor: pointer;
 	transition: color 0.15s ease, background-color 0.15s ease;
