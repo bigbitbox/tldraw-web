@@ -175,19 +175,19 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 
 	// Self-hosted asset URLs
 	// 画笔(draw)字体官方只有拉丁字形,中文会回退成系统黑体;
-	// 这里把 draw 字体的 4 个字重槽位都指向霞鹜文楷(SIL OFL 授权,见 /fonts/LXGWWenKai-LICENSE.txt),
-	// 让中文文本也保持手写风格。字体仅一个 Regular 字重,粗体/斜体由浏览器合成。
-	const LXGW_WENKAI_URL = '/fonts/LXGWWenKai-Regular.woff2'
+	// 这里把 draw 字体的 4 个字重槽位都指向站酷快乐体(SIL OFL 授权,见 /fonts/ZCOOLKuaiLe-LICENSE.txt),
+	// 让中文文本也保持卡通手写风格。字体仅一个 Regular 字重,粗体/斜体由浏览器合成。
+	const ZCOOL_KUAILE_URL = '/fonts/ZCOOLKuaiLe-Regular.woff2'
 	const assetUrls = useMemo(() => {
 		const defaults = getAssetUrls({ baseUrl: '/tldraw-assets' })
 		return {
 			...defaults,
 			fonts: {
 				...defaults.fonts,
-				tldraw_draw: LXGW_WENKAI_URL,
-				tldraw_draw_bold: LXGW_WENKAI_URL,
-				tldraw_draw_italic: LXGW_WENKAI_URL,
-				tldraw_draw_italic_bold: LXGW_WENKAI_URL,
+				tldraw_draw: ZCOOL_KUAILE_URL,
+				tldraw_draw_bold: ZCOOL_KUAILE_URL,
+				tldraw_draw_italic: ZCOOL_KUAILE_URL,
+				tldraw_draw_italic_bold: ZCOOL_KUAILE_URL,
 			},
 		}
 	}, [])
