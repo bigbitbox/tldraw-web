@@ -1,7 +1,7 @@
 set positional-arguments := true
 host := "ali-hk-24"
 url := "https://tldraw.rayzor.site"
-image := "ori/tldraw:20260913-oidc"
+image := "ori/tldraw:20260916-darkmode"
 
 default:
     @just --list
