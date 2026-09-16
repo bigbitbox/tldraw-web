@@ -1019,15 +1019,15 @@ button.prompt-tag span {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	background-color: #fafbfc;
-	color: #1a1a1a;
+	background-color: var(--app-bg);
+	color: var(--app-text);
 	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .workspace-header {
 	height: 60px;
-	background-color: #ffffff;
-	border-bottom: 1px solid #e5e7eb;
+	background-color: var(--app-surface);
+	border-bottom: 1px solid var(--app-border);
 	display: flex;
 	align-items: center;
 }
@@ -1051,22 +1051,22 @@ button.prompt-tag span {
 .workspace-brand-icon {
 	width: 24px;
 	height: 24px;
-	color: #2b6cb0;
+	color: var(--app-primary);
 }
 
 .workspace-brand-title {
 	font-size: 18px;
 	font-weight: 700;
 	margin: 0;
-	color: #111827;
+	color: var(--app-text);
 }
 
 .workspace-logout-btn {
 	padding: 6px 14px;
 	border-radius: 6px;
-	border: 1px solid #e5e7eb;
-	background-color: #ffffff;
-	color: #4b5563;
+	border: 1px solid var(--app-border);
+	background-color: var(--app-surface);
+	color: var(--app-text-2);
 	font-size: 13px;
 	font-weight: 500;
 	cursor: pointer;
@@ -1074,8 +1074,8 @@ button.prompt-tag span {
 }
 
 .workspace-logout-btn:hover {
-	background-color: #f3f4f6;
-	color: #111827;
+	background-color: var(--app-surface-3);
+	color: var(--app-text);
 }
 
 .workspace-main {
@@ -1090,8 +1090,8 @@ button.prompt-tag span {
 }
 
 .workspace-create-card {
-	background-color: #ffffff;
-	border: 1px solid #e5e7eb;
+	background-color: var(--app-surface);
+	border: 1px solid var(--app-border);
 	border-radius: 12px;
 	padding: 20px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -1107,15 +1107,15 @@ button.prompt-tag span {
 	height: 40px;
 	padding: 0 14px;
 	border-radius: 8px;
-	border: 1px solid #d1d5db;
+	border: 1px solid var(--app-border-strong);
 	font-size: 14px;
-	color: #111827;
+	color: var(--app-text);
 	outline: none;
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .workspace-create-input:focus {
-	border-color: #2563eb;
+	border-color: var(--app-primary);
 	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -1124,8 +1124,8 @@ button.prompt-tag span {
 	padding: 0 20px;
 	border-radius: 8px;
 	border: none;
-	background-color: #2563eb;
-	color: #ffffff;
+	background-color: var(--app-primary);
+	color: var(--app-surface);
 	font-size: 14px;
 	font-weight: 500;
 	cursor: pointer;
@@ -1134,7 +1134,7 @@ button.prompt-tag span {
 }
 
 .workspace-create-btn:hover:not(:disabled) {
-	background-color: #1d4ed8;
+	background-color: var(--app-primary-hover);
 }
 
 .workspace-create-btn:disabled {
@@ -1144,7 +1144,7 @@ button.prompt-tag span {
 
 .workspace-field-error {
 	margin: 8px 0 0 0;
-	color: #dc2626;
+	color: var(--app-danger);
 	font-size: 13px;
 }
 
@@ -1164,13 +1164,13 @@ button.prompt-tag span {
 	font-size: 16px;
 	font-weight: 600;
 	margin: 0;
-	color: #374151;
+	color: var(--app-text-2);
 }
 
 .workspace-refresh-btn {
 	background: none;
 	border: none;
-	color: #6b7280;
+	color: var(--app-text-3);
 	font-size: 13px;
 	cursor: pointer;
 	padding: 4px 8px;
@@ -1178,8 +1178,8 @@ button.prompt-tag span {
 }
 
 .workspace-refresh-btn:hover:not(:disabled) {
-	color: #111827;
-	background-color: #f3f4f6;
+	color: var(--app-text);
+	background-color: var(--app-surface-3);
 }
 
 .workspace-state-box {
@@ -1188,37 +1188,37 @@ button.prompt-tag span {
 	justify-content: center;
 	gap: 12px;
 	padding: 48px 20px;
-	background-color: #ffffff;
-	border: 1px dashed #d1d5db;
+	background-color: var(--app-surface);
+	border: 1px dashed var(--app-border-strong);
 	border-radius: 12px;
-	color: #6b7280;
+	color: var(--app-text-3);
 	font-size: 14px;
 }
 
 .workspace-error-box {
-	border-color: #fca5a5;
-	color: #dc2626;
+	border-color: var(--app-danger-border-strong);
+	color: var(--app-danger);
 }
 
 .workspace-retry-btn {
 	padding: 4px 12px;
 	border-radius: 6px;
-	border: 1px solid #d1d5db;
-	background-color: #ffffff;
-	color: #374151;
+	border: 1px solid var(--app-border-strong);
+	background-color: var(--app-surface);
+	color: var(--app-text-2);
 	font-size: 13px;
 	cursor: pointer;
 }
 
 .workspace-retry-btn:hover {
-	background-color: #f3f4f6;
+	background-color: var(--app-surface-3);
 }
 
 .workspace-spinner {
 	width: 18px;
 	height: 18px;
-	border: 2px solid #e5e7eb;
-	border-top-color: #2563eb;
+	border: 2px solid var(--app-border);
+	border-top-color: var(--app-primary);
 	border-radius: 50%;
 	animation: spin 0.8s linear infinite;
 }
@@ -1236,8 +1236,8 @@ button.prompt-tag span {
 }
 
 .workspace-card {
-	background-color: #ffffff;
-	border: 1px solid #e5e7eb;
+	background-color: var(--app-surface);
+	border: 1px solid var(--app-border);
 	border-radius: 10px;
 	padding: 16px 18px;
 	display: flex;
@@ -1245,12 +1245,12 @@ button.prompt-tag span {
 	justify-content: space-between;
 	cursor: pointer;
 	transition: all 0.18s ease;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+	box-shadow: 0 1px 2px var(--app-card-shadow);
 }
 
 .workspace-card:hover {
-	border-color: #93c5fd;
-	box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+	border-color: var(--app-primary-hover-border);
+	box-shadow: 0 4px 12px var(--app-card-shadow-hover);
 	transform: translateY(-1px);
 }
 
@@ -1265,7 +1265,7 @@ button.prompt-tag span {
 .workspace-card-name {
 	font-size: 15px;
 	font-weight: 600;
-	color: #111827;
+	color: var(--app-text);
 	margin: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1281,9 +1281,9 @@ button.prompt-tag span {
 }
 
 .workspace-badge-main {
-	background-color: #eff6ff;
-	color: #2563eb;
-	border: 1px solid #bfdbfe;
+	background-color: var(--app-primary-soft);
+	color: var(--app-primary);
+	border: 1px solid var(--app-primary-soft-border);
 }
 
 .workspace-card-footer {
@@ -1291,7 +1291,7 @@ button.prompt-tag span {
 	align-items: center;
 	justify-content: space-between;
 	font-size: 12px;
-	color: #9ca3af;
+	color: var(--app-text-4);
 	margin-bottom: 12px;
 }
 
@@ -1301,7 +1301,7 @@ button.prompt-tag span {
 }
 
 .workspace-card-action {
-	border-top: 1px solid #f3f4f6;
+	border-top: 1px solid var(--app-surface-3);
 	padding-top: 10px;
 	display: flex;
 	justify-content: flex-end;
@@ -1310,7 +1310,7 @@ button.prompt-tag span {
 .workspace-enter-link {
 	font-size: 13px;
 	font-weight: 500;
-	color: #2563eb;
+	color: var(--app-primary);
 }
 
 /* ==========================================================================
@@ -1322,7 +1322,7 @@ button.prompt-tag span {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: #f9fafb;
+	background-color: var(--app-bg);
 }
 
 .auth-overlay {
@@ -1331,18 +1331,18 @@ button.prompt-tag span {
 	align-items: center;
 	justify-content: center;
 	padding: 20px;
-	background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+	background: var(--app-auth-gradient);
 	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .auth-card {
 	width: 100%;
 	max-width: 380px;
-	background-color: #ffffff;
-	border: 1px solid #e2e8f0;
+	background-color: var(--app-surface);
+	border: 1px solid var(--app-border);
 	border-radius: 16px;
 	padding: 32px 28px;
-	box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+	box-shadow: 0 10px 25px -5px var(--app-card-shadow-lg);
 }
 
 .auth-header {
@@ -1354,8 +1354,8 @@ button.prompt-tag span {
 	width: 48px;
 	height: 48px;
 	border-radius: 12px;
-	background-color: #eff6ff;
-	color: #2563eb;
+	background-color: var(--app-primary-soft);
+	color: var(--app-primary);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1370,13 +1370,13 @@ button.prompt-tag span {
 .auth-title {
 	font-size: 20px;
 	font-weight: 700;
-	color: #0f172a;
+	color: var(--app-text);
 	margin: 0 0 6px 0;
 }
 
 .auth-subtitle {
 	font-size: 13px;
-	color: #64748b;
+	color: var(--app-text-3);
 	margin: 0;
 }
 
@@ -1395,26 +1395,26 @@ button.prompt-tag span {
 	height: 44px;
 	padding: 0 14px;
 	border-radius: 8px;
-	border: 1px solid #cbd5e1;
+	border: 1px solid var(--app-border-strong);
 	font-size: 14px;
-	color: #0f172a;
-	background-color: #f8fafc;
+	color: var(--app-text);
+	background-color: var(--app-surface-2);
 	outline: none;
 	transition: all 0.15s ease;
 }
 
 .auth-input:focus {
-	background-color: #ffffff;
-	border-color: #2563eb;
+	background-color: var(--app-surface);
+	border-color: var(--app-primary);
 	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .auth-error {
 	padding: 10px 12px;
 	border-radius: 8px;
-	background-color: #fef2f2;
-	border: 1px solid #fecaca;
-	color: #b91c1c;
+	background-color: var(--app-danger-bg);
+	border: 1px solid var(--app-danger-border);
+	color: var(--app-danger-text);
 	font-size: 13px;
 	display: flex;
 	align-items: center;
@@ -1425,7 +1425,7 @@ button.prompt-tag span {
 .auth-retry-btn {
 	background: none;
 	border: none;
-	color: #b91c1c;
+	color: var(--app-danger-text);
 	text-decoration: underline;
 	font-size: 12px;
 	cursor: pointer;
@@ -1436,8 +1436,8 @@ button.prompt-tag span {
 	height: 44px;
 	border-radius: 8px;
 	border: none;
-	background-color: #2563eb;
-	color: #ffffff;
+	background-color: var(--app-primary);
+	color: var(--app-surface);
 	font-size: 15px;
 	font-weight: 600;
 	cursor: pointer;
@@ -1445,10 +1445,96 @@ button.prompt-tag span {
 }
 
 .auth-submit-btn:hover:not(:disabled) {
-	background-color: #1d4ed8;
+	background-color: var(--app-primary-hover);
 }
 
 .auth-submit-btn:disabled {
 	opacity: 0.6;
 	cursor: not-allowed;
+}
+
+/* ==========================================================================
+   App Chrome Theme (workspace / auth pages) — light defaults + dark mode
+   ========================================================================== */
+
+:root {
+	--app-bg: #f9fafb;
+	--app-surface: #ffffff;
+	--app-surface-2: #f8fafc;
+	--app-surface-3: #f3f4f6;
+	--app-border: #e5e7eb;
+	--app-border-strong: #d1d5db;
+	--app-text: #111827;
+	--app-text-2: #374151;
+	--app-text-3: #6b7280;
+	--app-text-4: #9ca3af;
+	--app-primary: #2563eb;
+	--app-primary-hover: #1d4ed8;
+	--app-primary-soft: #eff6ff;
+	--app-primary-soft-border: #bfdbfe;
+	--app-primary-hover-border: #93c5fd;
+	--app-danger: #dc2626;
+	--app-danger-text: #b91c1c;
+	--app-danger-bg: #fef2f2;
+	--app-danger-border: #fecaca;
+	--app-danger-border-strong: #fca5a5;
+	--app-card-shadow: rgba(0, 0, 0, 0.03);
+	--app-card-shadow-hover: rgba(37, 99, 235, 0.08);
+	--app-card-shadow-lg: rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+	--app-auth-gradient: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+}
+
+html[data-theme='dark'] {
+	--app-bg: #0b0d12;
+	--app-surface: #14171e;
+	--app-surface-2: #1a1e27;
+	--app-surface-3: #222734;
+	--app-border: #2b3140;
+	--app-border-strong: #3d4457;
+	--app-text: #e6e8ee;
+	--app-text-2: #b7bdc9;
+	--app-text-3: #8a93a5;
+	--app-text-4: #626b7d;
+	--app-primary: #4f86f7;
+	--app-primary-hover: #6b9bf8;
+	--app-primary-soft: rgba(79, 134, 247, 0.14);
+	--app-primary-soft-border: rgba(79, 134, 247, 0.4);
+	--app-primary-hover-border: rgba(107, 155, 248, 0.55);
+	--app-danger: #ef4444;
+	--app-danger-text: #f87171;
+	--app-danger-bg: rgba(239, 68, 68, 0.1);
+	--app-danger-border: rgba(239, 68, 68, 0.3);
+	--app-danger-border-strong: rgba(239, 68, 68, 0.5);
+	--app-card-shadow: rgba(0, 0, 0, 0.35);
+	--app-card-shadow-hover: rgba(0, 0, 0, 0.45);
+	--app-card-shadow-lg: rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+	--app-auth-gradient: linear-gradient(135deg, #0b0d12 0%, #10131b 100%);
+	color-scheme: dark;
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 1px solid var(--app-border);
+	border-radius: 6px;
+	background: transparent;
+	color: var(--app-text-2);
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.theme-toggle-btn:hover {
+	background-color: var(--app-surface-3);
+	color: var(--app-text);
+	border-color: var(--app-border-strong);
+}
+
+.theme-toggle-icon {
+	width: 16px;
+	height: 16px;
 }

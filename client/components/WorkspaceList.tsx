@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { createRoom, getRooms, RoomInfo } from '../api'
+import { ThemeToggle } from './ThemeToggle'
 
 interface WorkspaceListProps {
 	onSelectRoom: (roomId: string) => void
@@ -86,9 +87,12 @@ export function WorkspaceList({ onSelectRoom, onLogout }: WorkspaceListProps) {
 						</svg>
 						<h1 className="workspace-brand-title">白板工作区</h1>
 					</div>
-					<button type="button" className="workspace-logout-btn" onClick={onLogout}>
-						退出登录
-					</button>
+					<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+						<ThemeToggle />
+						<button type="button" className="workspace-logout-btn" onClick={onLogout}>
+							退出登录
+						</button>
+					</div>
 				</div>
 			</header>
 
