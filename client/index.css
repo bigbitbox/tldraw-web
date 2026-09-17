@@ -1236,6 +1236,7 @@ button.prompt-tag span {
 
 .workspace-card {
 	background-color: var(--app-surface);
+	user-select: none;
 	border: 1px solid var(--app-border);
 	border-radius: 10px;
 	padding: 16px 18px;
@@ -1256,12 +1257,13 @@ button.prompt-tag span {
 .workspace-card-header {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
 	gap: 8px;
 	margin-bottom: 12px;
 }
 
 .workspace-card-name {
+	flex: 1;
+	min-width: 0;
 	font-size: 15px;
 	font-weight: 600;
 	color: var(--app-text);
@@ -1303,13 +1305,181 @@ button.prompt-tag span {
 	border-top: 1px solid var(--app-surface-3);
 	padding-top: 10px;
 	display: flex;
-	justify-content: flex-end;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .workspace-enter-link {
 	font-size: 13px;
 	font-weight: 500;
 	color: var(--app-primary);
+}
+
+.workspace-section-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.workspace-section-hint {
+	font-size: 12px;
+	color: var(--app-text-4);
+}
+
+.workspace-card-handle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	padding: 0;
+	flex-shrink: 0;
+	border: none;
+	border-radius: 6px;
+	background-color: transparent;
+	color: var(--app-text-4);
+	cursor: grab;
+	touch-action: none;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.workspace-card-handle:hover {
+	background-color: var(--app-surface-3);
+	color: var(--app-text-2);
+}
+
+.workspace-card-handle:active {
+	cursor: grabbing;
+}
+
+.workspace-card-handle svg {
+	width: 14px;
+	height: 14px;
+}
+
+.workspace-card-dragging {
+	border-color: var(--app-primary) !important;
+	box-shadow: 0 8px 20px var(--app-card-shadow-hover) !important;
+	opacity: 0.75;
+	transform: none !important;
+}
+
+.workspace-card-delete {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	background-color: transparent;
+	color: var(--app-text-4);
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.workspace-card-delete:hover:not(:disabled) {
+	border-color: var(--app-danger-border-strong);
+	background-color: var(--app-danger-bg);
+	color: var(--app-danger);
+}
+
+.workspace-card-delete:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+
+.workspace-card-delete svg {
+	width: 15px;
+	height: 15px;
+}
+
+.workspace-dialog-backdrop {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 100;
+}
+
+.workspace-dialog {
+	width: 100%;
+	max-width: 380px;
+	padding: 20px 22px;
+	border: 1px solid var(--app-border);
+	border-radius: 12px;
+	background-color: var(--app-surface);
+	box-shadow: 0 12px 32px var(--app-card-shadow-hover);
+}
+
+.workspace-dialog-title {
+	margin: 0 0 10px;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--app-text);
+}
+
+.workspace-dialog-text {
+	margin: 0 0 18px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--app-text-3);
+}
+
+.workspace-dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.workspace-dialog-btn {
+	padding: 7px 16px;
+	border: 1px solid var(--app-border-strong);
+	border-radius: 8px;
+	background-color: var(--app-surface);
+	color: var(--app-text-2);
+	font-size: 13px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.workspace-dialog-btn:hover:not(:disabled) {
+	background-color: var(--app-surface-3);
+}
+
+.workspace-dialog-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.workspace-dialog-btn-danger {
+	border-color: transparent;
+	background-color: var(--app-danger);
+	color: #fff;
+}
+
+.workspace-dialog-btn-danger:hover:not(:disabled) {
+	filter: brightness(1.08);
+	background-color: var(--app-danger);
+}
+
+.workspace-notice {
+	position: fixed;
+	left: 50%;
+	bottom: 28px;
+	transform: translateX(-50%);
+	padding: 10px 18px;
+	border: 1px solid var(--app-border);
+	border-radius: 8px;
+	background-color: var(--app-surface);
+	box-shadow: 0 6px 20px var(--app-card-shadow-hover);
+	font-size: 13px;
+	color: var(--app-text-2);
+	z-index: 120;
 }
 
 /* ==========================================================================

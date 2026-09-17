@@ -108,3 +108,31 @@ export async function renameRoom(id: string, name: string): Promise<RoomInfo | v
 		return
 	}
 }
+
+export async function reorderRooms(ids: string[]): Promise<RoomInfo[]> {
+	const res = await fetch('/api/rooms/order', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ ids }),
+		credentials: 'same-origin',
+	})
+	if (!res.ok) {
+		const text = await res.text().catch(() => '')
+		throw new Error(text || `保存白板顺序失败 (${res.status})`)
+	}
+	const data = (await res.json()) as { rooms?: RoomInfo[] }
+	return data.rooms || []
+}
+
+export async function deleteRoom(id: string): Promise<void> {
+	const res = await fetch(`/api/rooms/${encodeURIComponent(id)}`, {
+		method: 'DELETE',
+		credentials: 'same-origin',
+	})
+	if (!res.ok) {
+		const text = await res.text().catch(() => '')
+		throw new Error(text || `删除白板失败 (${res.status})`)
+	}
+}

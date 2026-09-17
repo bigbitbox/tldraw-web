@@ -17,6 +17,7 @@ import { oidcFromEnv, registerOidc, type OidcSettings } from './oidc'
 import type { Configuration } from 'openid-client'
 
 const roomName = z.object({ name: z.string().trim().min(1).max(120) })
+const roomOrder = z.object({ ids: z.array(z.string().trim().min(1).max(80)).min(1).max(500) })
 const mutation = z.object({
   expectedRevision: z.number().int().nonnegative(),
   upsert: z.array(z.record(z.string(), z.unknown())).max(1000).default([]),
@@ -99,6 +100,12 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
     if (!rooms.find(req.params.id)) throw fail(404, '画布不存在')
     return rooms.rename(req.params.id, roomName.parse(req.body).name)
   })
+  // 顺序与删除都是工作区列表的整体操作；主白板是固定入口，不参与删除。
+  app.put('/api/rooms/order', async (req) => ({ rooms: rooms.reorder(roomOrder.parse(req.body).ids) }))
+  app.delete<{ Params: { id: string } }>('/api/rooms/:id', async (req) => {
+    if (req.params.id === 'main') throw fail(400, '主白板不能删除')
+    return rooms.remove(req.params.id)
+  })
   app.get<{ Params: { id: string } }>('/api/rooms/:id/records', async (req) => {
     const { room, storage } = rooms.get(req.params.id)
     const snapshot = room.getCurrentSnapshot()
@@ -153,6 +160,8 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
       const { readFile } = await import('node:fs/promises')
       const type = await readFile(`${path}.mime`, 'utf8').catch(() => 'application/octet-stream')
       res.header('Content-Security-Policy', "default-src 'none'; sandbox")
+      // 附件名唯一且内容不变；no-store 会让每次导出重新下载图片，同样拖慢导出。
+      res.header('Cache-Control', 'private, max-age=604800')
       res.header('Content-Type', type)
       res.header('Content-Length', (await stat(path)).size)
       return res.send(createReadStream(path))
@@ -184,9 +193,29 @@ export async function buildServer(options: { dataDir?: string; accessToken?: str
   })
   const clientDir = resolve(options.clientDir ?? 'dist/client')
   if (existsSync(clientDir)) {
-    await app.register(statics, { root: clientDir, wildcard: true })
-    app.get('/', (_req, res) => res.sendFile('index.html'))
-    app.get('/r/:id', (_req, res) => res.sendFile('index.html'))
+    // 复制为 PNG 会在导出时重新读取字体（以及画布里的图片），而且必须赶在浏览器 5 秒的
+    // 用户激活窗口内完成剪贴板写入。原先所有静态资源都是 max-age=0，每次导出都要回源校验，
+    // 网络一抖动（实测出现过 10~20 秒的响应）导出就会超时、剪贴板写入被拒。
+    // 因此：构建产物带内容哈希可长期缓存，字体和 tldraw 资源按版本缓存。
+    const cacheControl = (file: string) => {
+      const normalized = file.replaceAll('\\', '/')
+      if (normalized.includes('/assets/')) return 'public, max-age=31536000, immutable'
+      if (normalized.includes('/tldraw-assets/')) return 'public, max-age=86400'
+      if (normalized.includes('/fonts/')) return 'public, max-age=604800'
+      return 'public, max-age=0'
+    }
+    await app.register(statics, {
+      root: clientDir,
+      wildcard: true,
+      cacheControl: false,
+      setHeaders: (res, file) => res.setHeader('Cache-Control', cacheControl(file)),
+    })
+    const spa = (_req: FastifyRequest, res: FastifyReply) => {
+      res.header('Cache-Control', 'public, max-age=0')
+      return res.sendFile('index.html')
+    }
+    app.get('/', spa)
+    app.get('/r/:id', spa)
   }
   app.addHook('onClose', async () => { clearInterval(attemptTimer); rooms.close() })
   return app
