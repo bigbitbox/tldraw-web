@@ -1,16 +1,24 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
 	AssetRecordType,
 	DefaultSizeStyle,
+	DefaultMainMenu,
+	DefaultMainMenuContent,
 	Editor,
 	ErrorBoundary,
 	getHashForString,
+	serializeTldrawJsonBlob,
 	TLComponents,
+	TLDRAW_FILE_EXTENSION,
 	Tldraw,
+	TldrawUiMenuGroup,
+	TldrawUiMenuItem,
 	TldrawUiToastsProvider,
 	TLUiOverrides,
 	uniqueId,
 	TLAssetStore,
+	useEditor,
+	useToasts,
 } from 'tldraw'
 import { useSync } from '@tldraw/sync'
 import { getAssetUrls } from '@tldraw/assets/selfHosted'
@@ -56,6 +64,43 @@ const overrides: TLUiOverrides = {
 			},
 		}
 	},
+}
+
+function RoomMainMenu({ roomName }: { roomName: string }) {
+	const editor = useEditor()
+	const { addToast, removeToast } = useToasts()
+	const exporting = useRef(false)
+
+	const saveCopy = async () => {
+		if (exporting.current) return
+		exporting.current = true
+		const toastId = addToast({ severity: 'info', title: '正在打包画布文件…', keepOpen: true })
+		try {
+			const blob = await serializeTldrawJsonBlob(editor)
+			const name = roomName.replace(/[\\/:*?"<>|]/g, '_').replace(/[.\s]+$/, '') || '画布'
+			const url = URL.createObjectURL(blob)
+			const link = editor.getContainer().ownerDocument.createElement('a')
+			link.href = url
+			link.download = `${name}${TLDRAW_FILE_EXTENSION}`
+			link.click()
+			setTimeout(() => URL.revokeObjectURL(url), 1000)
+		} catch (error) {
+			console.error('Failed to export tldraw file:', error)
+			addToast({ severity: 'error', title: '保存画布文件失败' })
+		} finally {
+			removeToast(toastId)
+			exporting.current = false
+		}
+	}
+
+	return (
+		<DefaultMainMenu>
+			<DefaultMainMenuContent />
+			<TldrawUiMenuGroup id="save-copy">
+				<TldrawUiMenuItem id="save-tldr" label="保存为 .tldr 文件" readonlyOk onSelect={saveCopy} />
+			</TldrawUiMenuGroup>
+		</DefaultMainMenu>
+	)
 }
 
 interface RoomViewProps {
@@ -207,6 +252,7 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 
 	const components: TLComponents = useMemo(() => {
 		return {
+			MainMenu: () => <RoomMainMenu roomName={roomName} />,
 			HelperButtons: () =>
 				app && (
 					<TldrawAgentAppContextProvider app={app}>
@@ -214,7 +260,7 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 					</TldrawAgentAppContextProvider>
 				),
 		}
-	}, [app])
+	}, [app, roomName])
 
 	return (
 		<div className="room-layout">
