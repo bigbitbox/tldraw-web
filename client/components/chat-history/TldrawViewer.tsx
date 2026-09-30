@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { assetUrls } from '../../assetUrls'
+import { addFontsFromNode, assetUrls } from '../../assetUrls'
 import {
-	defaultAddFontsFromNode,
 	defaultBindingUtils,
 	defaultShapeUtils,
 	Editor,
@@ -92,6 +91,6 @@ const defaultOptions = {
 		tipTapConfig: {
 			extensions: tipTapDefaultExtensions,
 		},
-		addFontsFromNode: defaultAddFontsFromNode,
+		addFontsFromNode,
 	},
 }

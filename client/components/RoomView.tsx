@@ -21,7 +21,7 @@ import {
 	useToasts,
 } from 'tldraw'
 import { useSync } from '@tldraw/sync'
-import { assetUrls } from '../assetUrls'
+import { addFontsFromNode, assetUrls } from '../assetUrls'
 import { getRooms, renameRoom } from '../api'
 import { TldrawAgentApp } from '../agent/TldrawAgentApp'
 import {
@@ -224,6 +224,7 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 	// 改为 10% 步进(0.1~4.0),首尾值即缩放上下限。
 	const cameraOptions = useMemo(
 		() => ({
+			text: { addFontsFromNode },
 			camera: {
 				zoomSteps: Array.from({ length: 40 }, (_, i) => (i + 1) / 10),
 			},
