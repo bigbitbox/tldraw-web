@@ -12,6 +12,23 @@ check:
     npm test
     npm run build
 
+# 从作者的固定发行版生成完整 WOFF2，保留字库与 OpenType 特性。
+font-xiaolai:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    font_stage="$(mktemp -d)"
+    trap 'rm -rf "$font_stage"' EXIT
+    curl --fail --location --silent --show-error 'https://github.com/lxgw/kose-font/releases/download/v3.126/Xiaolai-Regular.ttf' --output "$font_stage/Xiaolai.ttf"
+    curl --fail --location --silent --show-error 'https://raw.githubusercontent.com/lxgw/kose-font/v3.126/OFL.txt' --output "$font_stage/OFL.txt"
+    uv run --with 'fonttools[woff]' python - "$font_stage/Xiaolai.ttf" <<'PY'
+    import sys
+    from fontTools.ttLib import TTFont
+    font = TTFont(sys.argv[1])
+    font.flavor = 'woff2'
+    font.save('public/fonts/Xiaolai-v3.126-Regular.woff2')
+    PY
+    cp "$font_stage/OFL.txt" public/fonts/Xiaolai-LICENSE.txt
+
 # 所有安装、构建都在当前 Mac；云主机仅加载预构建镜像。
 build:
     @test -s "$HOME/.config/tldraw/license-key.txt"

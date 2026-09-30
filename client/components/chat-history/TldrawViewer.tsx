@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { getAssetUrls } from '@tldraw/assets/selfHosted'
+import { assetUrls } from '../../assetUrls'
 import {
 	defaultAddFontsFromNode,
 	defaultBindingUtils,
@@ -73,7 +73,7 @@ export function TldrawViewer({
 					bindingUtils={defaultBindingUtils}
 					tools={tools}
 					options={defaultOptions}
-					assetUrls={viewerAssetUrls}
+					assetUrls={assetUrls}
 					initialState="inspect"
 				/>
 			</TldrawUiContextProvider>
@@ -85,8 +85,6 @@ class InspectTool extends StateNode {
 	static override id = 'inspect'
 }
 
-// Keep identity stable: replacing assetUrls causes TldrawEditor to recreate its editor.
-const viewerAssetUrls = getAssetUrls({ baseUrl: '/tldraw-assets' })
 const tools = [InspectTool]
 
 const defaultOptions = {
