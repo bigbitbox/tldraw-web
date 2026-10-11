@@ -1,5 +1,7 @@
 # 自部署白板
 
+独立项目：[bigbitbox/tldraw-web](https://github.com/bigbitbox/tldraw-web)，本机目录为 `ray/tldraw-web`。Nix 部署配置保留在相邻的 `my-nix/hosts/nixos/server/ali-hk-24/tldraw.nix`；从 `my-nix` 可用 `just tldraw <命令>` 调用本项目的 justfile。
+
 运行在 `ali-hk-24`。入口：<https://tldraw.rayzor.site>，固定画布链接：<https://tldraw.rayzor.site/r/main>。公网可访问登录页，画布、附件、同步与 AI 接口均要求认证。
 
 这是基于官方组件整合的自部署实例，镜像由本仓库构建，不是官方 Docker 镜像。画布和同步依赖固定为 tldraw 5.4.2；官方 Agent 模板来源版本记录在 `UPSTREAM-REVISION`。
@@ -52,9 +54,9 @@ tldraw schema board.apply
 在仓库根目录运行：
 
 ```sh
-just -f apps/tldraw/justfile canvas-list
-just -f apps/tldraw/justfile canvas-get main
-just -f apps/tldraw/justfile canvas-apply main /tmp/changes.json
+just canvas-list
+just canvas-get main
+just canvas-apply main /tmp/changes.json
 ```
 
 读取返回 `{revision, schema, records}`。修改体格式：
@@ -74,14 +76,14 @@ API 修改和 AI 的修改都会实时反映到已打开的画布。正式构建
 ## 构建、部署与运维
 
 ```sh
-just -f apps/tldraw/justfile check
-just -f apps/tldraw/justfile build
-just -f apps/tldraw/justfile load
-just -f hosts/nixos/server/ali-hk-24/justfile deploy
-just -f apps/tldraw/justfile status
-just -f apps/tldraw/justfile logs
-just -f apps/tldraw/justfile restart
-just -f apps/tldraw/justfile backup
+just check
+just build
+just load
+just -f ../my-nix/hosts/nixos/server/ali-hk-24/justfile deploy
+just status
+just logs
+just restart
+just backup
 ```
 
 本机 OrbStack 构建 Linux amd64 镜像和 NixOS 配置；远端只接收镜像、闭包并激活服务。更新同名镜像后需要 `restart`。`build` 已包含 `--no-cache-filter build`，替换许可证后执行它即可；BuildKit secret 内容变化本身不会自动使缓存失效。首次部署需先落盘 `server.env`，再加载镜像并部署 Nix 配置。

@@ -7,7 +7,7 @@
 Node.js 22+，在仓库根目录执行：
 
 ```sh
-just -f apps/tldraw/justfile cli-install
+just cli-install
 tldraw auth login --server https://tldraw.rayzor.site --with-token < api-token.txt
 tldraw auth status
 tldraw skill install
@@ -50,7 +50,7 @@ tldraw asset add main --file /tmp/image.png --if-revision 12 --x 100 --y 100
 - 参考 [gh auth login](https://cli.github.com/manual/gh_auth_login) 的 stdin key、[gh formatting](https://cli.github.com/manual/gh_help_formatting) 的机器输出。
 - 参考 [Lark CLI](https://github.com/larksuite/cli) 的高层命令、schema 自发现、dry-run 与 Skill 配合。
 - 命令目录同时驱动参数解析、help、schema，减少文档漂移。`board.apply` 的输入 schema 由 Zod 定义生成。
-- `just -f apps/tldraw/justfile cli-check` 在本机跑官方服务集成测试，包括凭证、创建/修改/冲突、图片往返及重定向隔离。
+- `just cli-check` 在本机跑官方服务集成测试，包括凭证、创建/修改/冲突、图片往返及重定向隔离。
 - SDK 版本固定 5.4.2。升级后同步 package 依赖，执行 `cli-defaults`，重新检查并安装。CLI 检测服务端 schema 不匹配时停止写入。
 
 CLI 使用现有 HTTP records API，不包含浏览器编辑器的文本测量、自动布局和几何修正。重要视觉效果仍需浏览器验收。原始 `api` 命令是高级出口，不替代高层操作的引用检查。
