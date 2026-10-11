@@ -113,11 +113,20 @@ export function RoomView({ roomId, onBack, onLogout }: RoomViewProps) {
 	const [app, setApp] = useState<TldrawAgentApp | null>(null)
 	const [roomName, setRoomName] = useState<string>(roomId)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
-		if (typeof window !== 'undefined') {
-			return window.innerWidth > 768
+		try {
+			return localStorage.getItem('ai-sidebar-open') === 'true'
+		} catch {
+			return false
 		}
-		return true
 	})
+
+	useEffect(() => {
+		try {
+			localStorage.setItem('ai-sidebar-open', String(isSidebarOpen))
+		} catch {
+			// 存储不可用时，仍可在当前画布切换侧栏。
+		}
+	}, [isSidebarOpen])
 
 	// Fetch room details on mount
 	useEffect(() => {
